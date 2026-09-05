@@ -1,8 +1,8 @@
 ---
-import { render, type CollectionEntry } from "astro:content";
+import { type CollectionEntry, render } from "astro:content";
 import path from "node:path";
-import AccentBar from "@components/atoms/display/AccentBar.svelte";
 import IconButton from "@components/atoms/action/IconButton.svelte";
+import AccentBar from "@components/atoms/display/AccentBar.svelte";
 import Card from "@components/atoms/display/Card.svelte";
 import Markdown from "@components/content/Markdown.astro";
 import ImageWrapper from "@components/molecules/ImageWrapper.astro";
@@ -62,7 +62,6 @@ export async function getStaticPaths() {
 	}));
 	const discoveryOptions = resolveArticleDiscoveryOptions(articleConfig);
 
-	
 	const paths: {
 		params: { permalink: string };
 		props: {
@@ -75,7 +74,8 @@ export async function getStaticPaths() {
 		let permalink: string | null = null;
 
 		if (hasCustomPermalink(entry)) {
-			permalink = entry.data.permalink?.replace(/^\/+/, "").replace(/\/+$/, "") ?? null;
+			permalink =
+				entry.data.permalink?.replace(/^\/+/, "").replace(/\/+$/, "") ?? null;
 		} else if (permalinkConfig.enable) {
 			permalink = generatePermalinkSlug(entry);
 		}
@@ -102,7 +102,6 @@ export async function getStaticPaths() {
 	}
 
 	return paths;
-	
 }
 
 const { entry, discovery } = Astro.props;
@@ -146,6 +145,9 @@ const effectiveDescription =
 	isEncrypted && entry.data.hideHomeContent
 		? i18n(I18nKey.postEncryptedSummary)
 		: entry.data.description || entry.data.title;
+const ogImage = entry.data.image
+	? await resolveAsset(entry.data.image, imageBasePath)
+	: undefined;
 
 const canonicalPostUrl = getPostUrl(entry);
 
@@ -172,7 +174,7 @@ const jsonLd = {
 };
 ---
 
-<MainGridLayout banner={entry.data.image} title={entry.data.title} description={effectiveDescription} bannerDate={formatDateToYYYYMMDD(entry.data.published)} lang={entry.data.lang} setOGTypeArticle={true} headings={effectiveHeadings} postCategory={entry.data.category || undefined} page="post" hasComments={postCommentEnabled}>
+<MainGridLayout banner={entry.data.image} ogImage={ogImage} title={entry.data.title} description={effectiveDescription} bannerDate={formatDateToYYYYMMDD(entry.data.published)} lang={entry.data.lang} setOGTypeArticle={true} headings={effectiveHeadings} postCategory={entry.data.category || undefined} page="post" hasComments={postCommentEnabled}>
     {hasMath && <link slot="head" rel="stylesheet" data-swup-optional="math" href={katexStylesheet} />}
     {hasMath && <link slot="head" rel="stylesheet" data-swup-optional="math" href={overlayScrollbarsStylesheet} />}
     {markdownStylesheetAssets.map(({ pack, css }) => <style is:inline slot="head" data-swup-optional={pack} set:html={css}></style>)}
