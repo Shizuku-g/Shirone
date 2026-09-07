@@ -107,8 +107,9 @@ pnpm dev
 `init` creates `astro.config.mjs`, the typed configuration under `shirones/`,
 example content and static assets; `src/components/` and `src/layouts/` still
 work for overriding theme components. Re-run `npx shirones init` anytime to
-check for drift (it never overwrites your files), or pass `--force` to restore
-template files. See [npm package mode](./docs/npm-package-mode.md) and the
+check for drift — it reports without changing anything. Run `npx shirones
+init --update` to restore missing files, or `--force` to re-scaffold from the
+template. See [npm package mode](./docs/npm-package-mode.md) and the
 [shirones repository](https://github.com/yCENzh/shirones) for details.
 
 ### Customize your site

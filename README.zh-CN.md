@@ -99,7 +99,7 @@ npx shirones init   # 写入 package.json，安装 astro、主题及其 peer 依
 pnpm dev
 ```
 
-`init` 会生成 `astro.config.mjs`、`shirones/` 下的类型化配置、示例内容与静态资源；你依然可以通过 `src/components/` 和 `src/layouts/` 覆盖主题组件。随时重新运行 `npx shirones init` 可检查漂移（它不会覆盖你的文件），传入 `--force` 可还原模板文件。详见 [npm 包模式](./docs/npm-package-mode.md) 与 [shirones 仓库](https://github.com/yCENzh/shirones)。
+`init` 会生成 `astro.config.mjs`、`shirones/` 下的类型化配置、示例内容与静态资源；你依然可以通过 `src/components/` 和 `src/layouts/` 覆盖主题组件。随时重新运行 `npx shirones init` 检查漂移（只报告、不修改）；运行 `npx shirones init --update` 恢复缺失文件，或 `--force` 从模板重新初始化。详见 [npm 包模式](./docs/npm-package-mode.md) 与 [shirones 仓库](https://github.com/yCENzh/shirones)。
 
 ### 定制站点
 
