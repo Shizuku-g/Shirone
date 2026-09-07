@@ -8,6 +8,13 @@ declare module "virtual:shirone-music-sidebar" {
 	export default component;
 }
 
+declare module "virtual:shirone-music-floating" {
+	const component:
+		| typeof import("@components/organisms/music/floating/FloatingMusicPlayer.astro").default
+		| null;
+	export default component;
+}
+
 declare module "*scripts/anime/providers/bangumi.mjs" {
 	export function fetchBangumiData(config: unknown): Promise<{
 		provider: "bangumi";

@@ -213,6 +213,7 @@ export const id: Translation = {
 	[Key.musicVolume]: "Volume: {volume}",
 	[Key.musicShowPlaylist]: "Tampilkan daftar putar",
 	[Key.musicHidePlaylist]: "Sembunyikan daftar putar",
+	[Key.musicPlaylist]: "Daftar putar",
 	[Key.musicEmpty]: "Tidak ada lagu dalam daftar putar",
 	[Key.musicLoading]: "Memuat musik...",
 	[Key.musicNowPlaying]: "Sedang diputar: {title}",
@@ -221,6 +222,15 @@ export const id: Translation = {
 	[Key.musicErrorAutoplayBlocked]:
 		"Pemutaran otomatis diblokir. Tekan putar untuk memulai.",
 	[Key.musicErrorInvalidTrack]: "Lagu ini tidak valid.",
+	[Key.musicExpandPlayer]: "Buka pemutar musik",
+	[Key.musicCollapsePlayer]: "Tutup pemutar musik",
+	[Key.musicShowLyrics]: "Tampilkan lirik",
+	[Key.musicHideLyrics]: "Tampilkan sampul",
+	[Key.musicNoLyrics]: "Lirik tidak tersedia",
+	[Key.musicNotPlaying]: "Tidak diputar",
+	[Key.musicWaitingPlaylist]: "Menunggu daftar putar",
+	[Key.musicSeek]: "Cari posisi putar",
+	[Key.musicDragPlayer]: "Seret pemutar musik",
 
 	[Key.themeColor]: "Theme Color",
 	[Key.colorStyle]: "Gaya Warna",

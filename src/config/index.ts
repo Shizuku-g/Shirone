@@ -45,9 +45,12 @@ export { licenseConfig } from "./licenseConfig";
 export { llmsConfig } from "./llmsConfig";
 export {
 	clampMusicVolume,
+	isFloatingMusicPlayerEnabled,
 	musicConfig,
 	type ResolvedMusicOptions,
+	resolveFloatingMusicOptions,
 	resolveMusicOptions,
+	resolveMusicSourceOptions,
 } from "./musicConfig";
 export { LinkPresets, navBarConfig } from "./navBarConfig";
 export { permalinkConfig } from "./permalinkConfig";

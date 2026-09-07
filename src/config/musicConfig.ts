@@ -66,7 +66,17 @@ export const musicConfig: MusicConfig = withUserConfig("music", {
 	},
 	defaultVolume: 0.7,
 	defaultMode: "sequence",
+	floatingPlayer: {
+		enable: true,
+	},
 });
+
+/** 悬浮播放器是否应挂载 */
+export function isFloatingMusicPlayerEnabled(
+	config: MusicConfig = musicConfig,
+): boolean {
+	return Boolean(config.floatingPlayer?.enable);
+}
 
 export interface ResolvedMusicOptions {
 	readonly provider: MusicProvider;
@@ -118,11 +128,10 @@ export function clampMusicVolume(value: number, fallback = 0.7): number {
 	return Math.min(1, Math.max(0, value));
 }
 
-export function resolveMusicOptions(
+/** 解析音乐数据源与播放参数 */
+export function resolveMusicSourceOptions(
 	config: MusicConfig,
 ): ResolvedMusicOptions | null {
-	if (!config.enable) return null;
-
 	const provider: MusicProvider = config.provider ?? "local";
 
 	if (provider === "meting") {
@@ -169,4 +178,20 @@ export function resolveMusicOptions(
 		defaultVolume: clampMusicVolume(config.defaultVolume),
 		defaultMode: config.defaultMode,
 	});
+}
+
+/** 侧栏音乐播放器：需 enable 为 true 且音乐源有效。 */
+export function resolveMusicOptions(
+	config: MusicConfig,
+): ResolvedMusicOptions | null {
+	if (!config.enable) return null;
+	return resolveMusicSourceOptions(config);
+}
+
+/** 悬浮音乐播放器：需 floatingPlayer.enable 为 true 且音乐源有效。 */
+export function resolveFloatingMusicOptions(
+	config: MusicConfig,
+): ResolvedMusicOptions | null {
+	if (!isFloatingMusicPlayerEnabled(config)) return null;
+	return resolveMusicSourceOptions(config);
 }

@@ -212,6 +212,7 @@ export const tr: Translation = {
 	[Key.musicVolume]: "Ses düzeyi: {volume}",
 	[Key.musicShowPlaylist]: "Çalma listesini göster",
 	[Key.musicHidePlaylist]: "Çalma listesini gizle",
+	[Key.musicPlaylist]: "Çalma listesi",
 	[Key.musicEmpty]: "Çalma listesinde parça yok",
 	[Key.musicLoading]: "Müzik yükleniyor...",
 	[Key.musicNowPlaying]: "Şimdi çalıyor: {title}",
@@ -220,6 +221,15 @@ export const tr: Translation = {
 	[Key.musicErrorAutoplayBlocked]:
 		"Otomatik oynatma engellendi. Başlatmak için oynat düğmesine basın.",
 	[Key.musicErrorInvalidTrack]: "Bu parça geçersiz.",
+	[Key.musicExpandPlayer]: "Müzik çaları genişlet",
+	[Key.musicCollapsePlayer]: "Müzik çaları daralt",
+	[Key.musicShowLyrics]: "Sözleri göster",
+	[Key.musicHideLyrics]: "Kapak görselini göster",
+	[Key.musicNoLyrics]: "Söz yok",
+	[Key.musicNotPlaying]: "Çalmıyor",
+	[Key.musicWaitingPlaylist]: "Çalma listesi bekleniyor",
+	[Key.musicSeek]: "Konuma git",
+	[Key.musicDragPlayer]: "Müzik çaları sürükle",
 
 	[Key.themeColor]: "Theme Color",
 	[Key.colorStyle]: "Renk Stili",

@@ -32,6 +32,13 @@ export interface TrackDescriptor {
 	readonly coverWidth?: number;
 	readonly coverHeight?: number;
 	readonly duration?: number;
+	/** Meting 返回的 LRC 原文；悬浮播放器用于歌词面板。 */
+	readonly lyric?: string;
+}
+
+export interface FloatingMusicPlayerConfig {
+	/** 是否启用右下角悬浮胶囊播放器。 */
+	readonly enable?: boolean;
 }
 
 export interface MetingMusicConfig {
@@ -43,10 +50,12 @@ export interface MetingMusicConfig {
 	readonly id?: string;
 	/** Meting API 地址模板，默认使用公开 API */
 	readonly api?: string;
+	/** 按曲名搜索歌词时使用的 API（gdstudio 兼容）；mixed 模式下本地曲目缺歌词时按需调用。 */
+	readonly searchApi?: string;
 }
 
 export interface MusicConfig {
-	/** 是否全局启用音乐功能 */
+	/** 是否启用侧栏音乐播放器 */
 	readonly enable: boolean;
 	/** 音频数据源模式：local（本地曲目） | meting（Meting 远端歌单） | custom（显式传入 tracks） | mixed（本地与远端歌单合并） */
 	readonly provider?: MusicProvider;
@@ -58,6 +67,8 @@ export interface MusicConfig {
 	readonly defaultVolume: number;
 	/** 初始播放模式 */
 	readonly defaultMode: PlaybackMode;
+	/** 右下角悬浮胶囊播放器；关闭时不输出 DOM、不加载客户端 bundle。 */
+	readonly floatingPlayer?: FloatingMusicPlayerConfig;
 }
 
 export interface MusicSnapshot {

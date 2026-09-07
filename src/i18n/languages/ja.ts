@@ -210,6 +210,7 @@ export const ja: Translation = {
 	[Key.musicVolume]: "音量: {volume}",
 	[Key.musicShowPlaylist]: "プレイリストを表示",
 	[Key.musicHidePlaylist]: "プレイリストを非表示",
+	[Key.musicPlaylist]: "プレイリスト",
 	[Key.musicEmpty]: "プレイリストに曲がありません",
 	[Key.musicLoading]: "音楽を読み込み中...",
 	[Key.musicNowPlaying]: "再生中: {title}",
@@ -218,6 +219,15 @@ export const ja: Translation = {
 	[Key.musicErrorAutoplayBlocked]:
 		"自動再生がブロックされました。再生ボタンを押してください。",
 	[Key.musicErrorInvalidTrack]: "曲の情報が無効です。",
+	[Key.musicExpandPlayer]: "音楽プレイヤーを展開",
+	[Key.musicCollapsePlayer]: "音楽プレイヤーを折りたたむ",
+	[Key.musicShowLyrics]: "歌詞を表示",
+	[Key.musicHideLyrics]: "ジャケットを表示",
+	[Key.musicNoLyrics]: "歌詞がありません",
+	[Key.musicNotPlaying]: "再生していません",
+	[Key.musicWaitingPlaylist]: "プレイリストを読み込み中",
+	[Key.musicSeek]: "再生位置を移動",
+	[Key.musicDragPlayer]: "音楽プレイヤーをドラッグ",
 
 	[Key.themeColor]: "Theme Color",
 	[Key.colorStyle]: "配色スタイル",

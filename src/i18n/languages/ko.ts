@@ -209,6 +209,7 @@ export const ko: Translation = {
 	[Key.musicVolume]: "볼륨: {volume}",
 	[Key.musicShowPlaylist]: "재생 목록 표시",
 	[Key.musicHidePlaylist]: "재생 목록 숨기기",
+	[Key.musicPlaylist]: "재생 목록",
 	[Key.musicEmpty]: "재생 목록에 곡이 없습니다",
 	[Key.musicLoading]: "음악을 불러오는 중...",
 	[Key.musicNowPlaying]: "지금 재생 중: {title}",
@@ -217,6 +218,15 @@ export const ko: Translation = {
 	[Key.musicErrorAutoplayBlocked]:
 		"자동 재생이 차단되었습니다. 재생 버튼을 눌러 시작하세요.",
 	[Key.musicErrorInvalidTrack]: "곡 정보가 올바르지 않습니다.",
+	[Key.musicExpandPlayer]: "음악 플레이어 펼치기",
+	[Key.musicCollapsePlayer]: "음악 플레이어 접기",
+	[Key.musicShowLyrics]: "가사 보기",
+	[Key.musicHideLyrics]: "커버 보기",
+	[Key.musicNoLyrics]: "가사 없음",
+	[Key.musicNotPlaying]: "재생 중 아님",
+	[Key.musicWaitingPlaylist]: "재생 목록 로딩 중",
+	[Key.musicSeek]: "재생 위치 이동",
+	[Key.musicDragPlayer]: "음악 플레이어 끌기",
 
 	[Key.themeColor]: "Theme Color",
 	[Key.colorStyle]: "색상 스타일",

@@ -1,0 +1,139 @@
+---
+import { getImage } from "astro:assets";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import { resolveImageAsset } from "@utils/asset-utils";
+import stylus from "stylus";
+import { musicConfig, resolveFloatingMusicOptions } from "@/config/musicConfig";
+import { musicTracks } from "@/data/music";
+import { FLOATING_MUSIC_POSITION_STORAGE_KEY } from "@/utils/music/constants";
+import FloatingMusicPlayerClient from "./FloatingMusicPlayerClient.svelte";
+import { floatingMusicStylus } from "./floatingMusicStyles";
+
+const options = resolveFloatingMusicOptions(musicConfig);
+const enabled = Boolean(options);
+const configuredTracks =
+	musicConfig.tracks ??
+	(musicConfig.provider === "local" || musicConfig.provider === "mixed"
+		? musicTracks
+		: []);
+const configuredCovers = new Map(
+	configuredTracks.map((track) => [track.id.trim(), track.cover] as const),
+);
+const optimizedOptions = enabled && options
+	? {
+			...options,
+			playlist: await Promise.all(
+				options.playlist.map(async (track) => {
+					const configuredCover = configuredCovers.get(track.id) ?? track.cover;
+					if (!configuredCover) return track;
+					const asset = await resolveImageAsset(configuredCover);
+					if (typeof asset === "string") return track;
+					const widths = [64, 128].filter((width) => width <= asset.width);
+					if (!widths.length) widths.push(asset.width);
+					const candidates = await Promise.all(
+						widths.map(async (width) => ({
+							width,
+							image: await getImage({
+								src: asset,
+								width,
+								format: "webp",
+								quality: 68,
+							}),
+						})),
+					);
+					return {
+						...track,
+						cover: candidates.at(-1)?.image.src ?? asset.src,
+						coverSrcset: candidates
+							.map(({ image, width }) => `${image.src} ${width}w`)
+							.join(", "),
+						coverSizes: "56px",
+						coverWidth: asset.width,
+						coverHeight: asset.height,
+					};
+				}),
+			),
+		}
+	: null;
+const floatingMusicStyles = enabled
+	? await new Promise<string>((resolve, reject) => {
+			stylus.render(floatingMusicStylus, (error, css) => {
+				if (error) reject(error);
+				else resolve(css);
+			});
+		})
+	: null;
+const labels = {
+	expand: i18n(I18nKey.musicExpandPlayer),
+	collapse: i18n(I18nKey.musicCollapsePlayer),
+	previous: i18n(I18nKey.musicPrevious),
+	play: i18n(I18nKey.musicPlay),
+	pause: i18n(I18nKey.musicPause),
+	next: i18n(I18nKey.musicNext),
+	mute: i18n(I18nKey.musicMute),
+	unmute: i18n(I18nKey.musicUnmute),
+	playbackMode: i18n(I18nKey.musicPlaybackMode),
+	modeSequence: i18n(I18nKey.musicModeSequence),
+	modeRepeatOne: i18n(I18nKey.musicModeRepeatOne),
+	modeShuffle: i18n(I18nKey.musicModeShuffle),
+	showLyrics: i18n(I18nKey.musicShowLyrics),
+	hideLyrics: i18n(I18nKey.musicHideLyrics),
+	noLyrics: i18n(I18nKey.musicNoLyrics),
+	showPlaylist: i18n(I18nKey.musicShowPlaylist),
+	hidePlaylist: i18n(I18nKey.musicHidePlaylist),
+	playlist: i18n(I18nKey.musicPlaylist),
+	empty: i18n(I18nKey.musicEmpty),
+	loading: i18n(I18nKey.musicLoading),
+	notPlaying: i18n(I18nKey.musicNotPlaying),
+	waitingPlaylist: i18n(I18nKey.musicWaitingPlaylist),
+	seek: i18n(I18nKey.musicSeek),
+	dragPlayer: i18n(I18nKey.musicDragPlayer),
+	errors: {
+		"empty-playlist": i18n(I18nKey.musicErrorEmptyPlaylist),
+		"source-unavailable": i18n(I18nKey.musicErrorSourceUnavailable),
+		"autoplay-blocked": i18n(I18nKey.musicErrorAutoplayBlocked),
+		"invalid-track": i18n(I18nKey.musicErrorInvalidTrack),
+	},
+};
+---
+
+{optimizedOptions && floatingMusicStyles && (
+	<>
+		<script is:inline define:vars={{ storageKey: FLOATING_MUSIC_POSITION_STORAGE_KEY }}>
+			(function () {
+				var FAB = 56;
+				var EDGE = 8;
+				var margin = window.matchMedia("(min-width:640px)").matches ? 24 : 16;
+				var left = margin;
+				var top = Math.max(EDGE, window.innerHeight - FAB - margin);
+				try {
+					var raw = localStorage.getItem(storageKey);
+					if (raw) {
+						var parsed = JSON.parse(raw);
+						if (Number.isFinite(parsed.left)) left = parsed.left;
+						if (Number.isFinite(parsed.top)) top = parsed.top;
+					}
+				} catch (_error) {}
+				left = Math.min(
+					Math.max(EDGE, left),
+					Math.max(EDGE, window.innerWidth - FAB - EDGE),
+				);
+				top = Math.min(
+					Math.max(EDGE, top),
+					Math.max(EDGE, window.innerHeight - FAB - EDGE),
+				);
+				document.documentElement.style.setProperty(
+					"--floating-music-init-left",
+					left + "px",
+				);
+				document.documentElement.style.setProperty(
+					"--floating-music-init-top",
+					top + "px",
+				);
+			})();
+		</script>
+		<style is:inline set:html={floatingMusicStyles}></style>
+		<FloatingMusicPlayerClient client:load options={optimizedOptions} {labels} />
+	</>
+)}

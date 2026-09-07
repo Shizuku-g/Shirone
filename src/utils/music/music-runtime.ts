@@ -9,7 +9,13 @@ import type {
 	TrackDescriptor,
 } from "@/types/musicConfig";
 import { MUSIC_VOLUME_STORAGE_KEY, PLAYBACK_MODES } from "./constants";
-import { fetchMetingTracks } from "./meting";
+import {
+	fetchMetingTracks,
+	fetchMetingLyric,
+	isMetingLyricReference,
+	isResolvedLyricText,
+	resolveMetingLyricSongId,
+} from "./meting";
 import { nextTrackIndex, previousTrackIndex } from "./playlist";
 
 interface RuntimeState {
@@ -92,6 +98,48 @@ export function createMusicRuntime(
 	let loadedIndex = -1;
 	const failedTrackIds = new Set<string>();
 	const knownDurations = new Map<string, number>();
+	const enrichedTrackIds = new Set<string>();
+
+	function updateTrackAt(
+		index: number,
+		patch: Partial<TrackDescriptor>,
+	): void {
+		const track = currentPlaylist[index];
+		if (!track) return;
+		const updated = Object.freeze({ ...track, ...patch });
+		currentPlaylist = Object.freeze(
+			currentPlaylist.map((item, itemIndex) =>
+				itemIndex === index ? updated : item,
+			),
+		);
+		emit();
+	}
+
+	async function enrichTrackLyric(index: number): Promise<void> {
+		if (!options.meting || !customFetch) return;
+		if (options.provider !== "meting" && options.provider !== "mixed") return;
+
+		const track = currentPlaylist[index];
+		if (!track || isResolvedLyricText(track.lyric)) return;
+		if (isMetingLyricReference(track.lyric)) {
+			enrichedTrackIds.delete(track.id);
+		}
+		if (enrichedTrackIds.has(track.id)) return;
+
+		enrichedTrackIds.add(track.id);
+		const songId = await resolveMetingLyricSongId(
+			options.meting,
+			track,
+			currentPlaylist,
+			customFetch,
+		);
+		if (!songId) return;
+
+		const lyric = await fetchMetingLyric(options.meting, songId, customFetch);
+		if (!lyric) return;
+		if (currentPlaylist[index]?.id !== track.id) return;
+		updateTrackAt(index, { lyric });
+	}
 
 	function snapshot(): MusicSnapshot {
 		return Object.freeze({
@@ -300,6 +348,9 @@ export function createMusicRuntime(
 			audio.volume = volume;
 			audio.muted = state.muted;
 			patch({ volume });
+			if (state.currentIndex >= 0) {
+				void enrichTrackLyric(state.currentIndex);
+			}
 		});
 		initializePromise = pending;
 		try {
@@ -417,6 +468,7 @@ export function createMusicRuntime(
 					: fallbackDuration,
 			error: null,
 		});
+		void enrichTrackLyric(index);
 		if (autoplay) await playLoadedSource(false);
 		else await ensureSource();
 	}
@@ -560,6 +612,7 @@ export function createMusicRuntime(
 			loadedIndex = -1;
 			failedTrackIds.clear();
 			knownDurations.clear();
+			enrichedTrackIds.clear();
 			currentPlaylist = Object.freeze(
 				options.playlist.map((track) => Object.freeze({ ...track })),
 			);

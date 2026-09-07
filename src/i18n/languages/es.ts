@@ -212,6 +212,7 @@ export const es: Translation = {
 	[Key.musicVolume]: "Volumen: {volume}",
 	[Key.musicShowPlaylist]: "Mostrar lista de reproducción",
 	[Key.musicHidePlaylist]: "Ocultar lista de reproducción",
+	[Key.musicPlaylist]: "Lista de reproducción",
 	[Key.musicEmpty]: "No hay pistas en la lista de reproducción",
 	[Key.musicLoading]: "Cargando música...",
 	[Key.musicNowPlaying]: "Reproduciendo ahora: {title}",
@@ -220,6 +221,15 @@ export const es: Translation = {
 	[Key.musicErrorAutoplayBlocked]:
 		"La reproducción automática está bloqueada. Pulsa reproducir para comenzar.",
 	[Key.musicErrorInvalidTrack]: "Esta pista no es válida.",
+	[Key.musicExpandPlayer]: "Expandir reproductor",
+	[Key.musicCollapsePlayer]: "Contraer reproductor",
+	[Key.musicShowLyrics]: "Mostrar letra",
+	[Key.musicHideLyrics]: "Mostrar portada",
+	[Key.musicNoLyrics]: "Sin letra disponible",
+	[Key.musicNotPlaying]: "Sin reproducción",
+	[Key.musicWaitingPlaylist]: "Esperando la lista",
+	[Key.musicSeek]: "Buscar posición",
+	[Key.musicDragPlayer]: "Arrastrar reproductor",
 
 	[Key.themeColor]: "Theme Color",
 	[Key.colorStyle]: "Estilo de color",

@@ -30,6 +30,8 @@ export type {
 
 const MUSIC_VIRTUAL_ID = "virtual:shirone-music-sidebar";
 const RESOLVED_MUSIC_VIRTUAL_ID = `\0${MUSIC_VIRTUAL_ID}`;
+const MUSIC_FLOATING_VIRTUAL_ID = "virtual:shirone-music-floating";
+const RESOLVED_MUSIC_FLOATING_VIRTUAL_ID = `\0${MUSIC_FLOATING_VIRTUAL_ID}`;
 
 /**
  * Vite aliases mapping the theme's TypeScript path aliases onto the installed
@@ -121,6 +123,44 @@ function createMusicSidebarPlugin(
 	};
 }
 
+function createMusicFloatingPlugin(
+	paths: ResolvedShironesPaths,
+	enabled: boolean,
+) {
+	const floatingPath = join(
+		paths.packageSrc,
+		"components/organisms/music/floating/FloatingMusicPlayer.astro",
+	);
+
+	return {
+		name: "shirones:optional-music-floating",
+		enforce: "pre" as const,
+		resolveId(source: string) {
+			return source === MUSIC_FLOATING_VIRTUAL_ID
+				? RESOLVED_MUSIC_FLOATING_VIRTUAL_ID
+				: null;
+		},
+		load(id: string) {
+			if (id !== RESOLVED_MUSIC_FLOATING_VIRTUAL_ID) return null;
+			return enabled
+				? `export { default } from ${JSON.stringify(floatingPath)};`
+				: "export default null;";
+		},
+		generateBundle(_options: unknown, bundle: Record<string, unknown>) {
+			if (enabled) return;
+			for (const fileName of Object.keys(bundle)) {
+				if (
+					fileName.includes("FloatingMusicPlayerClient") ||
+					fileName.includes("FloatingPlayerLyrics") ||
+					fileName.includes("FloatingPlayerCover")
+				) {
+					delete bundle[fileName];
+				}
+			}
+		},
+	};
+}
+
 /**
  * The Shirone theme, packaged as an Astro integration.
  *
@@ -201,6 +241,9 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 				const resolveMusicOptions = musicModule.resolveMusicOptions as (
 					c: unknown,
 				) => unknown;
+				const resolveFloatingMusicOptions = musicModule.resolveFloatingMusicOptions as (
+					c: unknown,
+				) => unknown;
 
 				const umamiModule = await loadConfigModule(paths, "umamiConfig", registryRef);
 				const umamiConfig = umamiModule.umamiConfig as { shareUrl: string };
@@ -216,6 +259,8 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 				);
 				const musicEnabled =
 					musicWidgetEnabled && resolveMusicOptions(musicConfig) !== null;
+				const musicFloatingEnabled =
+					resolveFloatingMusicOptions(musicConfig) !== null;
 				const umamiEnabled = resolveUmamiOptions(umamiConfig) !== null;
 
 				// ── 2. Watch config files so the dev server restarts on edits ───
@@ -277,6 +322,7 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 							shironesFallbackResolver(paths),
 							shironesSsrNodeShims(),
 							createMusicSidebarPlugin(paths, musicEnabled),
+							createMusicFloatingPlugin(paths, musicFloatingEnabled),
 							(await import("@tailwindcss/vite")).default(),
 						],
 						optimizeDeps: {

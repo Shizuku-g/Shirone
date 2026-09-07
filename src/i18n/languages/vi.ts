@@ -212,6 +212,7 @@ export const vi: Translation = {
 	[Key.musicVolume]: "Âm lượng: {volume}",
 	[Key.musicShowPlaylist]: "Hiện danh sách phát",
 	[Key.musicHidePlaylist]: "Ẩn danh sách phát",
+	[Key.musicPlaylist]: "Danh sách phát",
 	[Key.musicEmpty]: "Danh sách phát chưa có bài hát",
 	[Key.musicLoading]: "Đang tải nhạc...",
 	[Key.musicNowPlaying]: "Đang phát: {title}",
@@ -220,6 +221,15 @@ export const vi: Translation = {
 	[Key.musicErrorAutoplayBlocked]:
 		"Tự động phát đã bị chặn. Nhấn nút phát để bắt đầu.",
 	[Key.musicErrorInvalidTrack]: "Bài hát này không hợp lệ.",
+	[Key.musicExpandPlayer]: "Mở trình phát nhạc",
+	[Key.musicCollapsePlayer]: "Thu gọn trình phát nhạc",
+	[Key.musicShowLyrics]: "Hiện lời bài hát",
+	[Key.musicHideLyrics]: "Hiện ảnh bìa",
+	[Key.musicNoLyrics]: "Không có lời bài hát",
+	[Key.musicNotPlaying]: "Không phát",
+	[Key.musicWaitingPlaylist]: "Đang tải danh sách",
+	[Key.musicSeek]: "Tua vị trí phát",
+	[Key.musicDragPlayer]: "Kéo trình phát nhạc",
 
 	[Key.themeColor]: "Theme Color",
 	[Key.colorStyle]: "Phong cách màu",

@@ -9,7 +9,9 @@ import {
 	createMusicRuntime,
 	nextTrackIndex,
 	parseMetingSong,
+	pickBestMetingSearchMatch,
 	previousTrackIndex,
+	resolveMetingLyricSongId,
 } from "../../src/utils/music";
 
 class MockAudio extends EventTarget {
@@ -166,6 +168,35 @@ test.describe("music configuration and playlist helpers", () => {
 		).toBeNull();
 	});
 
+	test("sidebar and floating player enable flags are independent", async () => {
+		const { resolveFloatingMusicOptions, isFloatingMusicPlayerEnabled } =
+			await import("../../src/config/musicConfig");
+
+		const sidebarOffFloatingOn: MusicConfig = {
+			enable: false,
+			floatingPlayer: { enable: true },
+			provider: "meting",
+			meting: { id: "12345", server: "netease", type: "playlist" },
+			defaultVolume: 0.7,
+			defaultMode: "sequence",
+		};
+		expect(resolveMusicOptions(sidebarOffFloatingOn)).toBeNull();
+		expect(isFloatingMusicPlayerEnabled(sidebarOffFloatingOn)).toBe(true);
+		expect(resolveFloatingMusicOptions(sidebarOffFloatingOn)).not.toBeNull();
+
+		const sidebarOnFloatingOff: MusicConfig = {
+			enable: true,
+			floatingPlayer: { enable: false },
+			provider: "meting",
+			meting: { id: "12345", server: "netease", type: "playlist" },
+			defaultVolume: 0.7,
+			defaultMode: "sequence",
+		};
+		expect(resolveMusicOptions(sidebarOnFloatingOff)).not.toBeNull();
+		expect(isFloatingMusicPlayerEnabled(sidebarOnFloatingOff)).toBe(false);
+		expect(resolveFloatingMusicOptions(sidebarOnFloatingOff)).toBeNull();
+	});
+
 	test("resolves default local data source when tracks is omitted", () => {
 		const resolved = resolveMusicOptions({
 			enable: true,
@@ -256,6 +287,52 @@ test.describe("music configuration and playlist helpers", () => {
 
 		const invalid = parseMetingSong({ name: "", url: "" }, 0);
 		expect(invalid).toBeNull();
+	});
+
+	test("picks the best meting search match by title and artist", () => {
+		const results = [
+			{ id: "1", name: "口笛で愛は歌えない", artist: ["Yolks"] },
+			{ id: "2", name: "口笛で愛は歌えない", artist: ["DAZBEE"] },
+		];
+		const match = pickBestMetingSearchMatch(
+			results,
+			"口笛で愛は歌えない",
+			"Dazbee",
+		);
+		expect(match?.id).toBe("2");
+	});
+
+	test("resolves local track lyric song id via metadata search", async () => {
+		const mockFetch = (async (input: RequestInfo | URL) => {
+			const url = String(input);
+			if (url.includes("types=search")) {
+				return {
+					ok: true,
+					json: async () => [
+						{
+							id: "2085560365",
+							name: "口笛で愛は歌えない",
+							artist: ["DAZBEE"],
+							lyric_id: "2085560365",
+						},
+					],
+				};
+			}
+			return { ok: false, status: 404 };
+		}) as unknown as typeof fetch;
+
+		const songId = await resolveMetingLyricSongId(
+			{ server: "netease" },
+			{
+				id: "dazbee",
+				title: "口笛で愛は歌えない",
+				artist: "Dazbee",
+				source: "/assets/music/url/dazbee.mp3",
+			},
+			[],
+			mockFetch,
+		);
+		expect(songId).toBe("2085560365");
 	});
 
 	test("covers empty, single, sequence, repeat, and deterministic shuffle indices", () => {

@@ -13,7 +13,7 @@ import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
 import { expressiveCodeConfig } from "./src/config/expressiveCodeConfig.ts";
 import { resolvedFontOptions } from "./src/config/fontConfig.ts";
-import { musicConfig, resolveMusicOptions } from "./src/config/musicConfig.ts";
+import { musicConfig, resolveFloatingMusicOptions, resolveMusicOptions } from "./src/config/musicConfig.ts";
 import { sidebarConfig } from "./src/config/sidebarConfig.ts";
 import { siteConfig } from "./src/config/siteConfig.ts";
 import { resolveUmamiOptions, umamiConfig } from "./src/config/umamiConfig.ts";
@@ -29,6 +29,7 @@ const musicWidgetEnabled =
 	);
 const musicFeatureEnabled =
 	resolveMusicOptions(musicConfig) !== null && musicWidgetEnabled;
+const musicFloatingEnabled = resolveFloatingMusicOptions(musicConfig) !== null;
 
 const resolvedUmamiOptions = resolveUmamiOptions(umamiConfig);
 const umamiIntegration = resolvedUmamiOptions
@@ -65,6 +66,37 @@ const optionalMusicSidebarPlugin = {
 				) {
 					delete bundle[fileName];
 				}
+			}
+		}
+	},
+};
+
+const musicFloatingModuleId = "virtual:shirone-music-floating";
+const resolvedMusicFloatingModuleId = `\0${musicFloatingModuleId}`;
+
+const optionalMusicFloatingPlugin = {
+	name: "shirone-optional-music-floating",
+	enforce: "pre",
+	resolveId(source) {
+		return source === musicFloatingModuleId
+			? resolvedMusicFloatingModuleId
+			: null;
+	},
+	load(id) {
+		if (id !== resolvedMusicFloatingModuleId) return null;
+		return musicFloatingEnabled
+			? 'export { default } from "/src/components/organisms/music/floating/FloatingMusicPlayer.astro";'
+			: "export default null;";
+	},
+	generateBundle(_options, bundle) {
+		if (musicFloatingEnabled) return;
+		for (const fileName of Object.keys(bundle)) {
+			if (
+				fileName.includes("FloatingMusicPlayerClient") ||
+				fileName.includes("FloatingPlayerLyrics") ||
+				fileName.includes("FloatingPlayerCover")
+			) {
+				delete bundle[fileName];
 			}
 		}
 	},
@@ -273,7 +305,7 @@ export default defineConfig({
 				},
 			],
 		},
-		plugins: [optionalMusicSidebarPlugin, tailwindcss()],
+		plugins: [optionalMusicSidebarPlugin, optionalMusicFloatingPlugin, tailwindcss()],
 		optimizeDeps: {
 			include: [
 				"mermaid",

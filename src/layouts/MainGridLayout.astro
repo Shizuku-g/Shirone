@@ -18,6 +18,7 @@ import {
 } from "@utils/responsive-utils";
 import type { MarkdownHeading } from "astro";
 import { contextMenuConfig } from "@/config";
+import { musicConfig, resolveFloatingMusicOptions } from "@/config/musicConfig";
 import type { SidebarPage } from "@/types/sidebarConfig";
 import Layout from "./Layout.astro";
 
@@ -61,6 +62,10 @@ const sidebarClasses = generatePrimarySidebarClasses(sidebarResponsive);
 const secondarySidebarClasses =
 	generateSecondarySidebarClasses(sidebarResponsive);
 const mainContentClasses = generateMainContentClasses(sidebarResponsive);
+const floatingMusicEnabled = resolveFloatingMusicOptions(musicConfig) !== null;
+const FloatingMusicPlayer = floatingMusicEnabled
+	? (await import("virtual:shirone-music-floating")).default
+	: null;
 ---
 
 <Layout title={title} banner={banner} ogImage={ogImage} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} page={page}>
@@ -129,5 +134,6 @@ const mainContentClasses = generateMainContentClasses(sidebarResponsive);
 		client:load
 	/>
 )}
+{FloatingMusicPlayer && <FloatingMusicPlayer />}
 
 </Layout>
