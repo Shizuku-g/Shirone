@@ -55,6 +55,8 @@ themeColor:
 
 `config/umami.yaml` 的 `websiteId` 与 `scriptUrl` 是可选的成对字段。省略两者时，`enable` 与 `shareUrl` 仍会启用公开统计读取；只有需要向 Umami 上报访问时才同时填写两者，单独填写任一字段不会加载采集脚本。
 
+`config/comment.yaml` 通过 `provider` 在 Twikoo 与 Giscus 之间二选一。选择 Giscus（基于 GitHub Discussions）时需同时填写 `giscus.repo`、`giscus.repoId` 与 `giscus.categoryId` 三个必填字段（从 giscus.app 配置生成器获取）；任一必填缺失时 `resolveCommentOptions()` 返回 `null`，评论区静默关闭、零额外负担。`giscus.theme` 是明暗双值对象，可以只覆盖 `dark` 一侧，另一侧沿用主题默认值（嵌套对象递归合并）。
+
 ### 自定义页脚注入 (`config/footer.html`)
 
 `config/footer.html` 是唯一的非 YAML 入口，用于注入自定义页脚 HTML 代码（如备案号、统计脚本等）。
@@ -182,6 +184,16 @@ customSections:
 | `GitHub` | `https://github.com/...` | GitHub 外部项目外链 |
 
 > **提示**：若预设名称拼写错误（如误写为 `preset: Archives`）或多语言词条不存在，系统在编译构建时会直接报错并列出所有可用预设，便于快速核对。
+
+### 3. 已关闭的功能会自动从导航中消失
+
+导航栏是**整体替换**的，因此它不会跟随各功能自己的 `enable` 开关自动增删；但指向已关闭功能页面的入口会在解析期被统一裁掉，不会留下点进去跳 `/404/` 的死链：
+
+- 判定对象是**站内路由**（去尾斜杠、忽略查询串与哈希），因此 `preset: Moments`、`url: /moments/`、`url: /moments?sort=recent` 三种写法一视同仁；
+- 裁剪对 `children` 递归生效；只作下拉容器（自身无 `url`）的分组若子项被全部裁掉，该分组也会一并隐藏，不会留下点不开的空下拉；
+- 站外链接（`https://...`）、锚点（`#top`）与始终存在的页面（`/`、`/archive/`、`/categories/`、`/tags/`）不受影响。
+
+也就是说：`config/moments.yaml` 里写 `enable: false` 之后，`config/nav-bar.yaml` 中所有指向 `/moments/` 的条目都无需删除即可自动隐身；重新开启时会照常出现（对应路由表见 `src/config/navBarConfig.ts`，实现见 `pruneUnavailableNavLinks()`）。
 
 ---
 

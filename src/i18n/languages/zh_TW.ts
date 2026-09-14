@@ -206,6 +206,7 @@ export const zh_TW: Translation = {
 	[Key.musicPlaylist]: "播放清單",
 	[Key.musicEmpty]: "播放清單中沒有歌曲",
 	[Key.musicLoading]: "正在載入音樂...",
+	[Key.musicNotRequested]: "音樂尚未請求",
 	[Key.musicNowPlaying]: "正在播放：{title}",
 	[Key.musicErrorEmptyPlaylist]: "播放清單是空的",
 	[Key.musicErrorSourceUnavailable]: "此音源無法使用",

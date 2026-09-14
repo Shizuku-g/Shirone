@@ -215,6 +215,7 @@ export const vi: Translation = {
 	[Key.musicPlaylist]: "Danh sách phát",
 	[Key.musicEmpty]: "Danh sách phát chưa có bài hát",
 	[Key.musicLoading]: "Đang tải nhạc...",
+	[Key.musicNotRequested]: "Chưa được yêu cầu",
 	[Key.musicNowPlaying]: "Đang phát: {title}",
 	[Key.musicErrorEmptyPlaylist]: "Danh sách phát trống.",
 	[Key.musicErrorSourceUnavailable]: "Không thể phát bài hát này.",

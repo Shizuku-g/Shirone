@@ -215,6 +215,7 @@ export const tr: Translation = {
 	[Key.musicPlaylist]: "Çalma listesi",
 	[Key.musicEmpty]: "Çalma listesinde parça yok",
 	[Key.musicLoading]: "Müzik yükleniyor...",
+	[Key.musicNotRequested]: "Henüz istenmedi",
 	[Key.musicNowPlaying]: "Şimdi çalıyor: {title}",
 	[Key.musicErrorEmptyPlaylist]: "Çalma listesi boş.",
 	[Key.musicErrorSourceUnavailable]: "Bu parça kullanılamıyor.",

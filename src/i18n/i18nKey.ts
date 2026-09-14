@@ -205,6 +205,7 @@ enum I18nKey {
 	musicPlaylist = "musicPlaylist",
 	musicEmpty = "musicEmpty",
 	musicLoading = "musicLoading",
+	musicNotRequested = "musicNotRequested",
 	musicNowPlaying = "musicNowPlaying",
 	musicErrorEmptyPlaylist = "musicErrorEmptyPlaylist",
 	musicErrorSourceUnavailable = "musicErrorSourceUnavailable",
