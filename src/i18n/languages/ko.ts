@@ -89,6 +89,22 @@ export const ko: Translation = {
 	[Key.devicesViewSpecs]: "상세 정보",
 	[Key.devicesFeatured]: "메인 추천",
 
+	[Key.games]: "게임",
+	[Key.gamesBanner]:
+		"내가 플레이하는 게임 — 커버 아트, 평점, 플레이 시간과 한줄평.",
+	[Key.gamesCounts]: "종",
+	[Key.gamesNoResults]: "조건에 맞는 게임이 없습니다",
+	[Key.gamesSearchPlaceholder]: "제목, 개발사, 장르로 검색...",
+	[Key.gamesCategoryLabel]: "게임 카테고리",
+	[Key.gamesStatusPlaying]: "플레이 중",
+	[Key.gamesStatusCompleted]: "클리어",
+	[Key.gamesStatusBacklog]: "밀린 게임",
+	[Key.gamesStatusWishlist]: "위시리스트",
+	[Key.gamesViewDetails]: "스토어 페이지",
+	[Key.gamesFeatured]: "추천",
+	[Key.gamesHours]: "시간",
+	[Key.gamesRating]: "평점",
+
 	[Key.timeline]: "타임라인",
 	[Key.timelineBanner]: "성장 궤적, 중요한 경험 및 이정표 기록.",
 	[Key.timelineCounts]: "개의 기록",

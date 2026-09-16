@@ -91,6 +91,22 @@ export const en: Translation = {
 	[Key.devicesViewSpecs]: "View details",
 	[Key.devicesFeatured]: "Featured",
 
+	[Key.games]: "Games",
+	[Key.gamesBanner]:
+		"Games I play — capsule art, ratings, playtime and short reviews.",
+	[Key.gamesCounts]: "games",
+	[Key.gamesNoResults]: "No games matched your filters",
+	[Key.gamesSearchPlaceholder]: "Search by title, developer, or genre...",
+	[Key.gamesCategoryLabel]: "Game categories",
+	[Key.gamesStatusPlaying]: "Playing",
+	[Key.gamesStatusCompleted]: "Completed",
+	[Key.gamesStatusBacklog]: "Backlog",
+	[Key.gamesStatusWishlist]: "Wishlist",
+	[Key.gamesViewDetails]: "Store page",
+	[Key.gamesFeatured]: "Featured",
+	[Key.gamesHours]: "hrs",
+	[Key.gamesRating]: "Rating",
+
 	[Key.timeline]: "Timeline",
 	[Key.timelineBanner]: "Growth trajectory, milestones, and memorable moments.",
 	[Key.timelineCounts]: "milestones",

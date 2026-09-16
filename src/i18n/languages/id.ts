@@ -92,6 +92,23 @@ export const id: Translation = {
 	[Key.devicesViewSpecs]: "Lihat detail",
 	[Key.devicesFeatured]: "Unggulan",
 
+	[Key.games]: "Game",
+	[Key.gamesBanner]:
+		"Game yang saya mainkan — sampul, rating, jam main, dan ulasan singkat.",
+	[Key.gamesCounts]: "game",
+	[Key.gamesNoResults]: "Tidak ada game yang cocok dengan filter",
+	[Key.gamesSearchPlaceholder]:
+		"Cari berdasarkan judul, pengembang, atau genre...",
+	[Key.gamesCategoryLabel]: "Kategori game",
+	[Key.gamesStatusPlaying]: "Dimainkan",
+	[Key.gamesStatusCompleted]: "Selesai",
+	[Key.gamesStatusBacklog]: "Tertunda",
+	[Key.gamesStatusWishlist]: "Daftar keinginan",
+	[Key.gamesViewDetails]: "Halaman toko",
+	[Key.gamesFeatured]: "Unggulan",
+	[Key.gamesHours]: "jam",
+	[Key.gamesRating]: "Rating",
+
 	[Key.timeline]: "Linimasa",
 	[Key.timelineBanner]:
 		"Jejak pertumbuhan, tonggak pencapaian, dan momen berharga.",

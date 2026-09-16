@@ -91,6 +91,22 @@ export const vi: Translation = {
 	[Key.devicesViewSpecs]: "Xem chi tiết",
 	[Key.devicesFeatured]: "Nổi bật",
 
+	[Key.games]: "Trò chơi",
+	[Key.gamesBanner]:
+		"Những trò chơi tôi chơi — ảnh bìa, điểm số, thời gian chơi và đánh giá ngắn.",
+	[Key.gamesCounts]: "trò chơi",
+	[Key.gamesNoResults]: "Không có trò chơi phù hợp với bộ lọc",
+	[Key.gamesSearchPlaceholder]: "Tìm theo tên, nhà phát triển hoặc thể loại...",
+	[Key.gamesCategoryLabel]: "Danh mục trò chơi",
+	[Key.gamesStatusPlaying]: "Đang chơi",
+	[Key.gamesStatusCompleted]: "Đã hoàn thành",
+	[Key.gamesStatusBacklog]: "Chờ chơi",
+	[Key.gamesStatusWishlist]: "Danh sách mong muốn",
+	[Key.gamesViewDetails]: "Trang cửa hàng",
+	[Key.gamesFeatured]: "Nổi bật",
+	[Key.gamesHours]: "giờ",
+	[Key.gamesRating]: "Đánh giá",
+
 	[Key.timeline]: "Dòng thời gian",
 	[Key.timelineBanner]:
 		"Hành trình phát triển, các cột mốc và khoảnh khắc đáng nhớ.",

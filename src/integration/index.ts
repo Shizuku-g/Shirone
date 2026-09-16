@@ -205,25 +205,30 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 				paths = resolvePaths(options, config.root, import.meta.url);
 
 				logger.info(
-					`${paths.isPluginMode ? "plugin" : "source"} mode | content: ${paths.contentDir}`,
+					`${paths.isInRepo ? "in-repo (source)" : paths.isPluginMode ? "plugin" : "source"} mode | content: ${paths.contentDir}`,
 				);
 
 				// Scan the package + user project once and register every
 				// override. Resolution becomes a table lookup; in dev the table
 				// is rebuilt when an override file changes (see server:setup).
-				const registry = buildOverrideRegistry(paths);
-				registryRef.overrides = registry.overrides;
-				{
-					const total = Object.values(registry.counts).reduce(
-						(sum, n) => sum + n,
-						0,
-					);
-					if (total > 0) {
-						logger.info(
-							`[overrides] ${total} registered (${Object.entries(registry.counts)
-								.map(([label, n]) => `${label}:${n}`)
-								.join(", ")})`,
+				// In-repo (source mode) the theme's own files are the resolution
+				// targets, so the registry stays empty and every lookup falls
+				// through to packageSrc.
+				if (!paths.isInRepo) {
+					const registry = buildOverrideRegistry(paths);
+					registryRef.overrides = registry.overrides;
+					{
+						const total = Object.values(registry.counts).reduce(
+							(sum, n) => sum + n,
+							0,
 						);
+						if (total > 0) {
+							logger.info(
+								`[overrides] ${total} registered (${Object.entries(registry.counts)
+									.map(([label, n]) => `${label}:${n}`)
+									.join(", ")})`,
+							);
+						}
 					}
 				}
 
@@ -331,11 +336,18 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 					vite: {
 						resolve: { alias: createAliases(paths) },
 						plugins: [
-							shironesOverlay({
-								paths,
-								components: options.components,
-								registryRef,
-							}),
+							// The overlay rewriter redirects user files onto package
+							// files; in-repo every import already resolves to the
+							// real source, so there is nothing to overlay.
+							...(paths.isInRepo
+								? []
+								: [
+										shironesOverlay({
+											paths,
+											components: options.components,
+											registryRef,
+										}),
+									]),
 							shironesFallbackResolver(paths),
 							shironesSsrNodeShims(),
 							createMusicSidebarPlugin(paths, musicEnabled),
@@ -349,10 +361,29 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 							// Vite log a warning for every one of them on every build.
 							include: prebundleCandidates(paths, prebundleSpecifiers),
 						},
-						// `viteBuildShared` deliberately omits the source-mode
-						// `esbuild` drop/pure options: stripping console.log here
-						// would strip it from a user's own code too.
+						// `viteBuildShared` deliberately omits any console-stripping
+						// config: stripping console.log from a user's own code in
+						// package mode would be wrong. The in-repo checkout *is* the
+						// source project, so it opts back in below — see
+						// docs/plans/single-source-config.md (Q3, in the shirones
+						// pipeline repository).
 						build: viteBuildShared,
+						// Source mode re-enables console-stripping for production
+						// builds. Since Astro 7 ships Vite 8 there is no
+						// `build.esbuild` key any more — the old astro.config.mjs
+						// carried one and it was silently ignored — so the
+						// transform options go to Vite's *top-level* `esbuild`,
+						// which the vite:esbuild plugin applies during builds.
+						// Gated to `command === "build"` so the dev server keeps
+						// its console output.
+						...(paths.isInRepo && command === "build"
+							? {
+									esbuild: {
+										drop: ["debugger"],
+										pure: ["console.log", "console.debug"],
+									},
+								}
+							: {}),
 					},
 				});
 
@@ -373,6 +404,18 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 			},
 
 			"astro:server:setup": ({ server }) => {
+				// Editing a config file must invalidate the Node-side bundle
+				// cache in every mode.
+				server.watcher.on("all", (_event, file) => {
+					if (typeof file !== "string") return;
+					if (file.startsWith(paths.configDir)) {
+						invalidateConfigCache();
+					}
+				});
+
+				// In-repo (source mode) there is no override registry to rebuild.
+				if (paths.isInRepo) return;
+
 				// Rebuild the override registry when an override file changes so
 				// dev picks new/moved/removed overrides up immediately.
 				const overrideDirs = createOverlayTargets(paths).map((t) =>
@@ -380,10 +423,6 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 				);
 				server.watcher.on("all", (_event, file) => {
 					if (typeof file !== "string") return;
-					// Editing a config file invalidates the Node-side bundle cache.
-					if (file.startsWith(paths.configDir)) {
-						invalidateConfigCache();
-					}
 					if (overrideDirs.some((dir) => file.startsWith(`${dir}/`))) {
 						registryRef.overrides = buildOverrideRegistry(paths).overrides;
 					}
@@ -391,7 +430,11 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 			},
 
 			"astro:build:done": async ({ dir, logger }) => {
-				if (options.pagefind === false) return;
+				// Source mode keeps the repo's `pagefind --site dist` CLI build
+				// step, which honours the repository's `pagefind.yml` (workers,
+				// exclusions, ...). Indexing here as well would build the index
+				// twice.
+				if (options.pagefind === false || paths.isInRepo) return;
 				const outDir = dir.pathname;
 				try {
 					const pagefind = await import("pagefind");

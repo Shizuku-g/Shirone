@@ -44,7 +44,7 @@
     "anime:sync": "node scripts/anime/sync.mjs",
     "fonts:check": "node scripts/fonts/check-fonts.mjs",
     "fonts:subset": "node scripts/fonts/subset-fonts.mjs",
-    "build": "node scripts/content/sync.mjs && node scripts/icons/generate-local-icons.mjs && node scripts/images/generate-moment-thumbnails.mjs && node scripts/fonts/subset-fonts.mjs && astro build && npx pagefind --site dist && node scripts/fonts/check-fonts.mjs",
+    "build": "node scripts/content/sync.mjs && node scripts/icons/generate-local-icons.mjs && node scripts/images/generate-moment-thumbnails.mjs && astro build && npx pagefind --site dist && node scripts/fonts/check-fonts.mjs",
     "preview": "astro preview",
     "lighthouse:collect": "lhci collect --config=lighthouserc.cjs",
     "lighthouse:assert": "lhci assert --config=lighthouserc.cjs",
@@ -78,7 +78,7 @@
     "@iconify-json/fa6-brands": "^1.2.6",
     "@iconify-json/fa6-regular": "^1.2.4",
     "@iconify-json/fa6-solid": "^1.2.4",
-    "@iconify-json/material-symbols": "^1.2.91",
+    "@iconify-json/material-symbols": "^1.2.92",
     "@iconify/svelte": "^5.2.2",
     "@material/material-color-utilities": "^0.4.0",
     "@panzoom/panzoom": "4.6.2",
@@ -113,8 +113,8 @@
     "sanitize-html": "^2.17.6",
     "sharp": "^0.35.4",
     "stylus": "^0.64.0",
-    "subset-font": "2.5.0",
-    "svelte": "^5.56.8",
+    "subset-font": "2.7.0",
+    "svelte": "^5.57.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "unified": "11.0.5",
@@ -124,10 +124,10 @@
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.11",
     "@axe-core/playwright": "^4.13.0",
-    "@biomejs/biome": "2.5.12",
+    "@biomejs/biome": "2.5.13",
     "@iconify-json/simple-icons": "^1.2.95",
     "@lhci/cli": "0.15.1",
-    "@playwright/test": "^1.62.1",
+    "@playwright/test": "^1.63.0",
     "@rollup/plugin-yaml": "^4.1.2",
     "@swup/scroll-plugin": "3.3.2",
     "@types/hast": "^3.0.5",
@@ -136,7 +136,7 @@
     "@types/qrcode": "^1.5.6",
     "@types/sanitize-html": "^2.16.1",
     "esbuild": "^0.28.2",
-    "vite": "^8.2.2"
+    "vite": "^8.3.0"
   },
   "packageManager": "pnpm@9.14.4"
 }

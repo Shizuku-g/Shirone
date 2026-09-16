@@ -62,7 +62,13 @@ export const postSchema = z.object({
 	passwordHint: z.string().optional().default(""),
 	hideHomeContent: z.boolean().optional().default(true),
 
-	/* Populated internally by the theme during collection post-processing */
+	/* Post alias & custom permalink */
+	alias: z.string().optional(),
+	permalink: z.string().optional(),
+
+	/* For internal use */
+	prevUrl: z.string().optional(),
+	nextUrl: z.string().optional(),
 	prevTitle: z.string().default(""),
 	prevSlug: z.string().default(""),
 	nextTitle: z.string().default(""),

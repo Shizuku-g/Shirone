@@ -5,10 +5,12 @@
  * 应用于 src/data/*.ts 的内容数据集合。
  */
 import { devicesData } from "../data/devices.ts";
+import { gamesData } from "../data/games.ts";
 import { projectsData } from "../data/projects.ts";
 import { skillsData } from "../data/skills.ts";
 import { timelineData } from "../data/timeline.ts";
 import type { DeviceItem, DevicesConfig } from "../types/devicesConfig.ts";
+import type { GameItem, GamesConfig } from "../types/gamesConfig.ts";
 import type { ProjectItem, ProjectsConfig } from "../types/projectsConfig.ts";
 import type { SkillItem, SkillsConfig } from "../types/skillsConfig.ts";
 import type { TimelineConfig, TimelineItem } from "../types/timelineConfig.ts";
@@ -210,6 +212,30 @@ export function resolveDevicesData(
 			? item.image.startsWith("/")
 				? url(item.image)
 				: item.image
+			: undefined,
+	}));
+}
+
+/**
+ * 解析游戏页展示数据。
+ */
+export function resolveGamesData(
+	config: GamesConfig,
+	customItems?: readonly GameItem[],
+): GameItem[] {
+	const source = customItems ?? config.items ?? gamesData;
+	const enabledItems = source.filter((item) => item.enable !== false);
+	const filtered = filterByDisabledKeys(
+		enabledItems,
+		config.disabledIds ?? config.disabledKeys,
+		(item) => item.id,
+	);
+	return filtered.map((item) => ({
+		...item,
+		cover: item.cover
+			? item.cover.startsWith("/")
+				? url(item.cover)
+				: item.cover
 			: undefined,
 	}));
 }

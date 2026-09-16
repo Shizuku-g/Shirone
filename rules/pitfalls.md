@@ -533,3 +533,27 @@ snapshotPathTemplate: "{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{arg
 
 **防回归**：在 `tests/site/post-encryption.spec.ts` 等测试中对移动端窄屏视口进行断言，验证输入框与按钮计算宽度与表单容器完全一致，且页面整体无任何水平滚动。
 
+---
+
+## 10. 页面切换与文档布局宽度
+
+### 10.1 滚动条有无会改变整页宽度：纯色背景切页横移
+
+**现象**：纯色背景（`wallpaperMode: "none"`）下站内切换页面时整页会左右抖一下（Windows Chrome 约 15px）；Banner 模式下完全正常。
+
+**根因**：
+1. `#main-layout` 是 `w-full` 的绝对定位容器，宽度取自初始包含块，因此经典滚动条出现/消失时整页宽度整体变化一个滚动条宽度；
+2. Banner 模式下 `#top-row` 的 `calc(var(--banner-stage-height) - 4.5rem)` 加上 `#main-layout` 的 `top: var(--banner-content-top)` 让文档恒高于视口，滚动条常驻，所以看不出问题；
+3. 纯色模式隐藏 Banner 后文档高度只剩内容，`/categories/`、`/tags/`、文章页等短页没有滚动条；
+4. `#page-height-extend`（`h-[300vh]`）在 `visit:start` 显示、`visit:end` + 200ms 隐藏，用来防止切页时滚动位置跳变，副作用是在切页边界强制开关滚动条，于是每次导航都横移一次（短→长在点击瞬间，长→短在到达后）。
+
+**解法**：`html { scrollbar-gutter: stable }`（`src/styles/main.css` base 层）常驻预留滚动条槽位，布局宽度与滚动条状态解耦。语义上正好是「有内容可滚动才显示滚动条」：Banner 模式与所有长页与今天逐像素一致，短页不显示滚动条、只留 15px 空槽位。`#page-height-extend` 不用动——它只决定抖动发生的时刻，不是根因。
+
+**为什么不用 `overflow-y: scroll`（滚动条常显）**：短页会多出一条无意义的滚动条，实测其轨道色与页面底色差 (2,11,3)——而空槽位本就显示页面底色，顶栏右上角 15×64px 的差异也只有这一量级（暗色实测 Δ≤0.5，无可见差异）。常显滚动条还会让所有页面永远损失一条滚动条的宽度感。代价：旧版 Safari（< 18.2）忽略 `scrollbar-gutter`，退回原行为（无回归）；macOS 默认覆盖式滚动条，本来就不受影响。
+
+**不要顺手把满宽图层往槽位里撑**：顶栏、纹理画布这些满宽 fixed 图层的盒子宽度就是初始包含块宽度，槽位在盒子之外。直接加负 `margin-inline-end` 会连内容一起推出去（顶栏右侧图标组会横移 15px，反而是新的抖动）。真要像素级对齐，得改成「伪元素画 surface 并单独延伸」，收益只有上述 Δ≈2 的色阶，不值得。
+
+**延伸**：以 `body.style.overflow = "hidden"` 锁定页面滚动的代码（代码树全屏、Mermaid 全屏）必须走 `src/utils/scroll-lock.ts`，不得内联直接改。该工具**不能**用 `window.innerWidth - documentElement.clientWidth` 判断是否需要补偿：槽位预留生效时该差值在锁定后会变成 0，但布局宽度根本没变，补偿会把 `#top-row` 白窄 15px（1265 → 1250）。正确做法是用 `body` 的 border box 宽度锁定前后各测一次，只在真的变宽时补等量内边距。补偿只覆盖 `body` 内容盒内的常规流元素（`#top-row`、顶部栏），绝对定位的 `#main-layout` 只能靠槽位预留兜底。
+
+**防回归**：`tests/site/layout-stability.spec.ts`（覆盖槽位预留、长短页宽度一致、长/短页双向导航、壁纸模式切换、页面滚动锁、无槽位时的补偿）。注意 Playwright 默认带 `--hide-scrollbars`，滚动条宽度为 0 时该契约完全不可观测，spec 必须显式关掉该默认参数。
+

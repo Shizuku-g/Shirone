@@ -90,6 +90,22 @@ export const tr: Translation = {
 	[Key.devicesViewSpecs]: "Detayları gör",
 	[Key.devicesFeatured]: "Öne çıkan",
 
+	[Key.games]: "Oyunlar",
+	[Key.gamesBanner]:
+		"Oynadığım oyunlar — kapak görseli, puan, oynama süresi ve kısa incelemeler.",
+	[Key.gamesCounts]: "oyun",
+	[Key.gamesNoResults]: "Filtrelerle eşleşen oyun yok",
+	[Key.gamesSearchPlaceholder]: "Başlık, geliştirici veya türe göre ara...",
+	[Key.gamesCategoryLabel]: "Oyun kategorileri",
+	[Key.gamesStatusPlaying]: "Oynanıyor",
+	[Key.gamesStatusCompleted]: "Tamamlandı",
+	[Key.gamesStatusBacklog]: "Bekleyen",
+	[Key.gamesStatusWishlist]: "İstek listesi",
+	[Key.gamesViewDetails]: "Mağaza sayfası",
+	[Key.gamesFeatured]: "Öne çıkan",
+	[Key.gamesHours]: "sa",
+	[Key.gamesRating]: "Puan",
+
 	[Key.timeline]: "Zaman Çizelgesi",
 	[Key.timelineBanner]:
 		"Büyüme yolculuğu, kilometre taşları ve unutulmaz anlar.",

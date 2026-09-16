@@ -23,6 +23,7 @@ const pages = [
 	{ name: "技能", path: "/skills/" },
 	{ name: "项目", path: "/projects/" },
 	{ name: "设备展示", path: "/devices/" },
+	{ name: "游戏", path: "/games/" },
 	{ name: "时间线", path: "/timeline/" },
 	{ name: "受保护相册", path: "/albums/EncryptedExample/" },
 	{ name: "关于", path: "/about/" },
