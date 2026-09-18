@@ -57,6 +57,7 @@ shirone-content/
 ├── content/                    # 核心内容区（映射至 src/content/）
 │   ├── posts/                  # 博客文章与配图
 │   ├── moments/                # 说说动态
+│   ├── series/                 # 系列实体（每个 <slug>.md = 一个系列；须平铺，slug 即路由段）
 │   └── spec/                   # 特殊页面
 ├── data/                       # 结构化数据（映射至 src/data/）
 │   ├── projects.ts  skills.ts  timeline.ts  devices.ts

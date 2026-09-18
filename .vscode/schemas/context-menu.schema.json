@@ -114,6 +114,12 @@
               {
                 "type": "string",
                 "enum": [
+                  "series"
+                ]
+              },
+              {
+                "type": "string",
+                "enum": [
                   "rss"
                 ]
               },

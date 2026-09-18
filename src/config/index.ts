@@ -64,6 +64,7 @@ export { permalinkConfig } from "./permalinkConfig";
 export { POST_CARD_MIN_WIDTH, postListConfig } from "./postListConfig";
 export { profileConfig } from "./profileConfig";
 export { projectsConfig } from "./projectsConfig";
+export { seriesConfig } from "./seriesConfig";
 export { sidebarConfig } from "./sidebarConfig";
 export {
 	getDefaultSpec,

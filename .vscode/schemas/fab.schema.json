@@ -235,6 +235,12 @@
                         {
                           "type": "string",
                           "enum": [
+                            "series"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
                             "rss"
                           ]
                         },
@@ -451,6 +457,12 @@
                         {
                           "type": "string",
                           "enum": [
+                            "series"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
                             "rss"
                           ]
                         },
@@ -629,6 +641,12 @@
                           "type": "string",
                           "enum": [
                             "tags"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "series"
                           ]
                         },
                         {
@@ -821,6 +839,12 @@
                           "type": "string",
                           "enum": [
                             "tags"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "series"
                           ]
                         },
                         {
