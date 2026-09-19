@@ -37,10 +37,11 @@ export type {
 	ShironesPaths,
 } from "./types.ts";
 
-// NOTE: `defineCollections` is deliberately *not* re-exported here. It imports
-// `astro:content`, a virtual module that only exists inside Vite, so pulling it
-// into this Node-side entry would break `astro.config.mjs` loading. Users import
-// it from the dedicated `shirones/collections` entry point instead.
+// NOTE: `defineCollections` function is no longer exported. The schemas
+// (`postSchema`, `momentSchema`, `specSchema`) are exported from
+// `shirones/collections` for users to use inline in their
+// `src/content.config.ts` with \`defineCollection\` from "astro:content".
+// This ensures Astro's typegen works correctly in both source and package modes.
 
 const RESOLVED_MUSIC_VIRTUAL_ID = `\0${MUSIC_SIDEBAR_VIRTUAL_ID}`;
 const MUSIC_FLOATING_VIRTUAL_ID = "virtual:shirone-music-floating";
@@ -408,7 +409,9 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 				// cache in every mode.
 				server.watcher.on("all", (_event, file) => {
 					if (typeof file !== "string") return;
-					if (file.startsWith(paths.configDir)) {
+					// Trailing separator so a sibling such as `src/configFoo`
+					// does not also match.
+					if (file.startsWith(`${paths.configDir}/`)) {
 						invalidateConfigCache();
 					}
 				});
@@ -571,9 +574,9 @@ async function createBundledIntegrations(
 		}),
 		svelte({
 			// The theme's Svelte components use `<style lang="stylus">`, which
-			// needs `vitePreprocess`. In source mode that comes from the repo's
-			// `svelte.config.js`; a user's project has no such file, so the
-			// integration supplies it.
+			// needs `vitePreprocess`. Supplied here for *every* mode: the repo's
+			// own `svelte.config.js` is only read by editor tooling now, and a
+			// user's project has no such file at all.
 			preprocess: [vitePreprocess({ script: true })],
 			compilerOptions: svelteCompilerOptions(command === "dev"),
 		}),
