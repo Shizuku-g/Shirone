@@ -75,7 +75,6 @@ export const momentSchema = z.object({
 export const specSchema = z.object({});
 
 /**
-/**
  * Schema for series entities. Each entry is one series; the Markdown body is
  * the optional overview rendered on the series page.
  */
@@ -110,5 +109,3 @@ export function createCollection(
 		schema: schemas[key],
 	});
 }
-
-export { defineCollection, glob, z };
