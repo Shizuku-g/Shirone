@@ -348,7 +348,7 @@ export async function fetchMetingLyric(
 export function parseMetingSong(
 	song: RawMetingSong,
 	index: number,
-	server = DEFAULT_METING_SERVER,
+	server: string = DEFAULT_METING_SERVER,
 ): TrackDescriptor | null {
 	if (!song || typeof song !== "object") return null;
 
