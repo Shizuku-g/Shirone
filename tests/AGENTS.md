@@ -7,4 +7,3 @@
 - Keep visual snapshots local and intentional. They are ignored by Git; do not update them to absorb unrelated viewport, font, page-height, or cache drift. Use DOM geometry/state assertions when a screenshot is unavailable or the difference is not attributable to the change.
 - Select the narrowest relevant fragment, then add `tests/site/a11y.spec.ts` for page/component changes. Use `tests/site/albums.spec.ts`, `icons.spec.ts`, or `motion.spec.ts` when those contracts are touched.
 
-test1111
