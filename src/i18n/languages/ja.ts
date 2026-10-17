@@ -255,7 +255,7 @@ export const ja: Translation = {
 	[Key.musicSeek]: "再生位置を移動",
 	[Key.musicDragPlayer]: "音楽プレイヤーをドラッグ",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "テーマカラー",
 	[Key.colorStyle]: "配色スタイル",
 	[Key.colorSpec]: "配色仕様",
 

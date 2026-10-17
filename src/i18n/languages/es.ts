@@ -258,7 +258,7 @@ export const es: Translation = {
 	[Key.musicSeek]: "Buscar posición",
 	[Key.musicDragPlayer]: "Arrastrar reproductor",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "Color del tema",
 	[Key.colorStyle]: "Estilo de color",
 	[Key.colorSpec]: "Especificación",
 

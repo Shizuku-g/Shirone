@@ -260,7 +260,7 @@ export const id: Translation = {
 	[Key.musicSeek]: "Cari posisi putar",
 	[Key.musicDragPlayer]: "Seret pemutar musik",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "Warna Tema",
 	[Key.colorStyle]: "Gaya Warna",
 	[Key.colorSpec]: "Spesifikasi Warna",
 

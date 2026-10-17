@@ -247,7 +247,7 @@ export const zh_CN: Translation = {
 	[Key.musicSeek]: "跳转播放进度",
 	[Key.musicDragPlayer]: "拖动音乐播放器",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "主题色",
 	[Key.colorStyle]: "配色风格",
 	[Key.colorSpec]: "配色规范",
 

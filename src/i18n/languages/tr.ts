@@ -258,7 +258,7 @@ export const tr: Translation = {
 	[Key.musicSeek]: "Konuma git",
 	[Key.musicDragPlayer]: "Müzik çaları sürükle",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "Tema Rengi",
 	[Key.colorStyle]: "Renk Stili",
 	[Key.colorSpec]: "Renk Spesifikasyonu",
 

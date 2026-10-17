@@ -258,7 +258,7 @@ export const vi: Translation = {
 	[Key.musicSeek]: "Tua vị trí phát",
 	[Key.musicDragPlayer]: "Kéo trình phát nhạc",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "Màu chủ đề",
 	[Key.colorStyle]: "Phong cách màu",
 	[Key.colorSpec]: "Đặc tả màu",
 

@@ -246,7 +246,7 @@ export const th: Translation = {
 	[Key.musicSeek]: "ไปยังตำแหน่งเล่น",
 	[Key.musicDragPlayer]: "ลากเครื่องเล่นเพลง",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "สีธีม",
 	[Key.colorStyle]: "สไตล์สี",
 	[Key.colorSpec]: "สเปกสี",
 

@@ -255,7 +255,7 @@ export const ko: Translation = {
 	[Key.musicSeek]: "재생 위치 이동",
 	[Key.musicDragPlayer]: "음악 플레이어 끌기",
 
-	[Key.themeColor]: "Theme Color",
+	[Key.themeColor]: "테마 색상",
 	[Key.colorStyle]: "색상 스타일",
 	[Key.colorSpec]: "색상 규격",
 
