@@ -350,8 +350,7 @@ export function createMusicRuntime(
 								);
 								patch({
 									currentIndex: initialIndex,
-									duration:
-										currentPlaylist[initialIndex]?.duration ?? 0,
+									duration: currentPlaylist[initialIndex]?.duration ?? 0,
 									status: "idle",
 									error: null,
 								});
@@ -375,8 +374,7 @@ export function createMusicRuntime(
 							patch({
 								currentIndex: initialIndex,
 								status: "idle",
-								duration:
-									currentPlaylist[initialIndex]?.duration ?? 0,
+								duration: currentPlaylist[initialIndex]?.duration ?? 0,
 								error: null,
 							});
 						}
