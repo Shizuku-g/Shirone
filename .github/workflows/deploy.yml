@@ -1,42 +1,34 @@
+# 双仓 + Cloudflare Pages（Deploy Hook）模式：
+# 构建在 Cloudflare 侧完成（需配置 CONTENT_REPO_URL 等环境变量）。
+# 本 workflow 只负责 POST 部署钩子，不向 GitHub Pages 推送。
 name: Deploy Shirone Blog
 
 on:
   push:
     branches: [main]
   repository_dispatch:
-    types: [content-updated] # 响应内容仓库发送的派发事件
+    types: [content-updated]
   workflow_dispatch:
 
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
-  build-and-deploy:
+  trigger-cloudflare:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Theme Repo
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js & pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Pull Private Content & Build
+      - name: Trigger Cloudflare Pages build
         env:
-          CONTENT_REPO_URL: "https://x-access-token:${{ secrets.CONTENT_ACCESS_TOKEN }}@github.com/${{ github.repository_owner }}/shirone-content.git"
+          CLOUDFLARE_DEPLOY_HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
         run: |
-          pnpm content:sync
-          pnpm build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_DEPLOY_HOOK:-}" ]; then
+            echo "未配置 CLOUDFLARE_DEPLOY_HOOK。请在主题仓 Settings → Secrets and variables → Actions 中添加。" >&2
+            exit 1
+          fi
+          curl --fail-with-body --silent --show-error --retry 3 --retry-delay 2 \
+            --max-time 30 --request POST "$CLOUDFLARE_DEPLOY_HOOK"
