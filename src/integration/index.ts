@@ -422,6 +422,9 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 							// Node cannot load when externalized, so Vite bundles it.
 							noExternal: ["@material/material-color-utilities"],
 						},
+						// `as never`: DeepPartial<AstroConfig> maps arrays into a
+						// partial element type, which no precisely typed PluginOption[]
+						// can satisfy; the array's own elements stay checked above.
 						plugins: [
 							// The overlay rewriter redirects user files onto package
 							// files; inside the theme's own repository every import already
@@ -442,7 +445,7 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 							createMusicSidebarPlugin(paths, musicEnabled),
 							createMusicFloatingPlugin(paths, musicFloatingEnabled),
 							(await import("@tailwindcss/vite")).default(),
-						],
+						] as never,
 						optimizeDeps: {
 							// Only pre-bundle what the *user's* project can actually
 							// resolve. Under pnpm's strict layout these are nested
