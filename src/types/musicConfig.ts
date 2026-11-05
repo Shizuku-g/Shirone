@@ -95,6 +95,7 @@ export interface MusicSnapshot {
 
 export interface MusicRuntime {
 	initialize(): Promise<void>;
+	ensureTrackLyric(index: number): Promise<void>;
 	getSnapshot(): MusicSnapshot;
 	subscribe(listener: (snapshot: MusicSnapshot) => void): () => void;
 	play(): Promise<void>;

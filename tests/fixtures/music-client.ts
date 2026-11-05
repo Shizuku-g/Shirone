@@ -133,6 +133,10 @@ export async function mountMusicClient(
 			const runtimeModule = await import(/* @vite-ignore */ runtimeUrl);
 			runtimeModule.destroyMusicRuntime();
 
+			document.querySelectorAll(".floating-music-dock").forEach((el) => {
+				el.remove();
+			});
+
 			document.querySelectorAll(".sidebar-widget").forEach((el) => {
 				if (
 					el.querySelector("[data-music-player]") ||

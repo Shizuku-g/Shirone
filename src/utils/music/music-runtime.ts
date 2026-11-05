@@ -402,9 +402,6 @@ export function createMusicRuntime(
 			audio.volume = volume;
 			audio.muted = state.muted;
 			patch({ volume });
-			if (state.currentIndex >= 0) {
-				void enrichTrackLyric(state.currentIndex);
-			}
 		});
 		initializePromise = pending;
 		try {
@@ -563,6 +560,9 @@ export function createMusicRuntime(
 
 	return {
 		initialize,
+		async ensureTrackLyric(index: number): Promise<void> {
+			await enrichTrackLyric(index);
+		},
 		getSnapshot: snapshot,
 		subscribe(listener) {
 			listeners.add(listener);

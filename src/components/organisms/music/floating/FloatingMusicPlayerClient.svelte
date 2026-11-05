@@ -63,23 +63,23 @@ interface Props {
 
 let { options, labels }: Props = $props();
 
+const hasInitialTracks = options.playlist.length > 0;
+const hasMeting =
+	(options.provider === "meting" || options.provider === "mixed") &&
+	Boolean(options.meting?.id);
+
 let runtime = $state<MusicRuntime | null>(null);
 let snapshot = $state<MusicSnapshot>({
 	playlist: options.playlist,
-	currentIndex: options.playlist.length > 0 ? 0 : -1,
+	currentIndex: hasInitialTracks ? 0 : -1,
 	currentTrack: options.playlist[0] ?? null,
-	status: options.provider === "meting" ? "loading" : "idle",
+	status: "idle",
 	currentTime: 0,
 	duration: options.playlist[0]?.duration ?? 0,
 	volume: options.defaultVolume,
 	muted: false,
 	mode: options.defaultMode,
-	error:
-		options.playlist.length > 0 ||
-		options.provider === "meting" ||
-		options.provider === "mixed"
-			? null
-			: "empty-playlist",
+	error: hasInitialTracks || hasMeting ? null : "empty-playlist",
 });
 
 let collapsed = $state(true);
@@ -315,13 +315,35 @@ function handleFabPointerCancel(event: PointerEvent) {
 onMount(() => {
 	let unsubscribe = () => {};
 	let active = true;
+	let viewportObserver: IntersectionObserver | null = null;
 	void import("@utils/music").then(({ getMusicRuntime }) => {
 		if (!active) return;
 		runtime = getMusicRuntime(options);
 		unsubscribe = runtime.subscribe((next) => {
 			snapshot = next;
 		});
-		void runtime.initialize();
+		// 与侧栏一致：preload=metadata 时在视口内预取歌单；否则等播放/展开列表再 initialize。
+		if (
+			hasMeting &&
+			!hasInitialTracks &&
+			options.meting?.preload === "metadata" &&
+			rootEl &&
+			typeof IntersectionObserver !== "undefined"
+		) {
+			viewportObserver = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						if (entry.isIntersecting) {
+							viewportObserver?.disconnect();
+							viewportObserver = null;
+							void runtime?.initialize();
+						}
+					}
+				},
+				{ rootMargin: "0px", threshold: 0 },
+			);
+			viewportObserver.observe(rootEl);
+		}
 	});
 
 	if (!fabAnchor) {
@@ -348,6 +370,8 @@ onMount(() => {
 
 	return () => {
 		active = false;
+		viewportObserver?.disconnect();
+		viewportObserver = null;
 		unsubscribe();
 		window.removeEventListener("resize", handleResize);
 		document.removeEventListener("pointerdown", handlePointerDown);
@@ -443,6 +467,13 @@ $effect(() => {
 	previousTrackId = id;
 	showLyrics = false;
 	scrubTime = null;
+});
+
+$effect(() => {
+	if (!showLyrics || !runtime || !lyricPending) return;
+	const index = snapshot.currentIndex;
+	if (index < 0) return;
+	void runtime.ensureTrackLyric(index);
 });
 </script>
 
